@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>nazat portfolio</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo">2026</div>
+        <nav>
+            <a href="#home">Beranda</a>
+            <a href="#skills">Skill</a>
+            <a href="#projects">Proyek</a>
+            <a href="#about">Tentang</a>
+            <a href="#contact">Kontak</a>
+        </nav>
+    </header>
+
+    <section id="home">
+        <div class="hero">
+            <canvas id="particle-canvas"></canvas>
+            <div class="hero-flex">
+                <div class="hero-content">
+                    <div class="hero-badge">welcome to my portfolio</div>
+                    <h1>Halo! Saya <span class="glitch-text">M Nazat</span><br>Computer Engineering</h1>
+                    <div class="typewriter-container">
+                        <span id="typewriter-text"></span><span class="cursor">|</span>
+                    </div>
+                    <p style="margin: 0.6rem 0 0.8rem; font-size: 0.9rem;">building smart projects with code & hardware</p>
+                    <div>
+                        <a href="#projects" class="btn magnetic-btn">🔥 Lihat Karya</a>
+                        <a href="#contact" class="btn btn-outline magnetic-btn">📬 Hubungi</a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat"><p id="stat1">0</p><span>Tahun Pengalaman</span></div>
+                        <div class="stat"><p id="stat2">0</p><span>Proyek Selesai</span></div>
+                        <div class="stat"><p id="stat3">0</p><span>Kepuasan</span></div>
+                    </div>
+                </div>
+                <div class="hero-photo">
+                    <div class="profile-wrapper">
+                        <div class="profile-frame shape-unique">
+                            <img src="img/1.jpeg" alt="M Nazat - Computer Engineer" onerror="this.src='https://placehold.co/400x400/ffb703/0a0c10?text=CE+2026'">
+                        </div>
+                        <div class="profile-badge">
+                            <i class="fas fa-crown"></i> computer engineering 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MARQUEE TEXT -->
+    <div class="marquee-container">
+        <div class="marquee-content">
+            <span>⚡ C / C++</span>
+            <span>🐍 Python</span>
+            <span>🛜 Embedded Systems</span>
+            <span>📡 IoT</span>
+            <span>🔧 ESP32</span>
+            <span>⚡ C / C++</span>
+            <span>🐍 Python</span>
+            <span>🛜 Embedded Systems</span>
+            <span>📡 IoT</span>
+            <span>🔧 ESP32</span>
+        </div>
+    </div>
+
+    <section id="skills">
+        <h2>kompetensi inti</h2>
+        <div class="skills-grid">
+            <div class="skill-card"><i class="fas fa-microchip"></i><h3>Embedded Systems</h3><p>Arduino, ESP32, STM32</p></div>
+            <div class="skill-card"><i class="fab fa-linux"></i><h3>Linux Embedded</h3><p>Yocto, Buildroot</p></div>
+            <div class="skill-card"><i class="fas fa-network-wired"></i><h3>Jaringan & IoT</h3><p>MQTT, TCP/IP, LoRa</p></div>
+            <div class="skill-card"><i class="fas fa-code"></i><h3>C/C++ & Python</h3><p>Firmware, Automation</p></div>
+            <div class="skill-card"><i class="fas fa-mobile-alt"></i><h3>Frontend UI</h3><p>Neubrutal, React</p></div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2>project unggulan</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-icon"><i class="fas fa-robot"></i></div>
+                <h3>Smart Home Gateway</h3>
+                <div class="tech-badge">ESP32</div><div class="tech-badge">MQTT</div>
+                <p>Gateway IoT dengan protokol MQTT, kontrol relay & sensor via dashboard web real-time.</p>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> Live Demo →</a>
+            </div>
+            <div class="project-card">
+                <div class="project-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Industrial Monitoring</h3>
+                <div class="tech-badge">InfluxDB</div><div class="tech-badge">Grafana</div>
+                <p>Sistem monitoring suhu & kelembaban industri dengan alert telegram dan database time-series.</p>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> Live Demo →</a>
+            </div>
+            <div class="project-card">
+                <div class="project-icon"><i class="fas fa-globe"></i></div>
+                <h3>Neubrutal Portfolio</h3>
+                <div class="tech-badge">HTML/CSS/JS</div>
+                <p>Website portofolio dengan efek typewriter, music player, shadow keras, dan responsive design.</p>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> Source Code →</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="about-wrap">
+            <h2>tentang saya</h2>
+            <div class="about-flex">
+                <div class="about-text">
+                    <p>👨‍💻 saya m nazat — tertarik pada embedded systems, iot, jaringan komputer, dan web development. saya suka membuat project, mencoba teknologi baru, dan menggabungkan coding dengan hardware.<strong>Bold, fungsional, inovatif.</strong></p>
+                    <p>📡 sebagian besar waktu dihabiskan untuk belajar, bereksperimen, memperbaiki error, lalu mengulang lagi sampai project berjalan.</p>
+                </div>
+                <div class="social-icons-modern">
+                    <a href="https://www.instagram.com/nxzxt._" target="_blank" rel="noopener noreferrer" class="social-icon"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-icon"><i class="fab fa-github"></i> GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="contact-section">
+            <h2>kirim pesan</h2>
+            <div class="contact-grid">
+                <div>
+                    <div class="contact-item"><i class="fas fa-envelope"></i> mn****@gmail.com</div>
+                    <div class="contact-item"><i class="fab fa-whatsapp"></i> +62 812 3456 7890</div>
+                    <div class="contact-item"><i class="fas fa-map-pin"></i>Cianjur, Jawa Barat</div>
+                </div>
+                <div>
+                    <form id="modernForm" autocomplete="off">
+                        <!-- Honeypot Field (anti-bot) -->
+                        <div style="position: absolute; left: -9999px;" aria-hidden="true">
+                            <input type="text" name="website" tabindex="-1" autocomplete="off">
+                        </div>
+                        <div class="form-group"><input type="text" id="fullname" placeholder="Nama lengkap" required autocomplete="off"></div>
+                        <div class="form-group"><input type="email" id="emailAddr" placeholder="Email aktif" required autocomplete="off"></div>
+                        <div class="form-group"><textarea rows="3" id="msgContent" placeholder="Pesan detail..." required></textarea></div>
+                        <button type="submit" class="submit-btn" id="submitBtn"><i class="fas fa-paper-plane"></i> Kirim</button>
+                        <div id="formStatus" style="margin-top: 0.6rem; font-weight: bold; font-size: 0.8rem;"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 M Nazat — computer engineering</p>
+    </footer>
+</div>
+
+<!-- MUSIC PLAYER -->
+<div class="music-float">
+    <div class="music-icon-btn" id="musicMainBtn">
+        <i class="fas fa-headphones"></i>
+    </div>
+    <div class="music-popup-card" id="musicPopupCard">
+        <div class="popup-header-card">
+            <span><i class="fas fa-music"></i> Music Player</span>
+            <button id="closePopupBtn">✕</button>
+        </div>
+        <div class="popup-body-card">
+            <div class="now-playing-name" id="nowPlayingName">🎵 Pilih lagu</div>
+            <div class="track-list-vertical" id="trackListVertical"></div>
+            <div class="player-buttons">
+                <button id="prevTrackMini"><i class="fas fa-backward"></i></button>
+                <button id="playPauseMini"><i class="fas fa-play"></i></button>
+                <button id="nextTrackMini"><i class="fas fa-forward"></i></button>
+            </div>
+            <div class="progress-area">
+                <span class="time-mini" id="currentTimeMini">0:00</span>
+                <div class="progress-bar-mini" id="progressBarMini">
+                    <div class="progress-fill-mini" id="progressFillMini"></div>
+                </div>
+                <span class="time-mini" id="durationTimeMini">0:00</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script src="script.js"></script>
+</body>
+</html>
