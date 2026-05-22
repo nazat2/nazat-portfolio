@@ -45,6 +45,11 @@ seorang mahasiswa **computer engineering** yang fokus di:
   <img src="https://img.shields.io/badge/git-%23F05032.svg?style=for-the-badge&logo=git&logoColor=white">
 </div>
 
+<p align="center">
+  <img src="https://media.tenor.com/QG3DI3swR4oAAAAi/hu-tao.gif" height="200" />
+  <img src="https://media.tenor.com/hmYVvHn6-McAAAAi/genshin-impact-hu-tao.gif" height="200" />
+</p>
+
 ---
 
 <div align="center">
