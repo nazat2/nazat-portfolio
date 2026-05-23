@@ -1,16 +1,6 @@
 (function() {
     "use strict";
     
-    // ========== SECURITY WARNING ==========
-    console.log("%c⚠️ PERHATIAN!", "color: #ffb703; font-size: 20px; font-weight: bold;");
-    console.log("%cshippai wa owari janai. sore wa tsugi no kaishi da.", "color: #d9534f; font-size: 14px;");
-    console.log("%c— nazat", "color: #d9534f; font-size: 14px;");
-    
-    // ========== GLOBAL USER GESTURE FLAG ==========
-    let userInteracted = false;
-    document.addEventListener('click', () => { userInteracted = true; }, { once: true });
-    document.addEventListener('touchstart', () => { userInteracted = true; }, { once: true });
-    
     // ========== GSAP + SCROLLTRIGGER DETECTION ==========
     const hasGSAP = typeof gsap !== 'undefined';
     const hasScrollTrigger = typeof ScrollTrigger !== 'undefined';
@@ -18,7 +8,6 @@
     if (hasGSAP && hasScrollTrigger) {
         gsap.registerPlugin(ScrollTrigger);
         
-        // Animasi Hero
         gsap.fromTo(".hero-badge", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "back.out(0.5)" });
         gsap.fromTo("h1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: "back.out(0.5)" });
         gsap.fromTo(".typewriter-container", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.4, ease: "back.out(0.5)" });
@@ -26,7 +15,6 @@
         gsap.fromTo(".hero .btn", { opacity: 0, y: 30, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, delay: 0.8, stagger: 0.1, ease: "elastic.out(1, 0.5)" });
         gsap.fromTo(".profile-wrapper", { opacity: 0, scale: 0.8, rotation: -5 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.8, delay: 0.5, ease: "back.out(0.6)" });
         
-        // Scroll animations
         gsap.fromTo("#skills h2", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.8, scrollTrigger: { trigger: "#skills", start: "top 85%" } });
         gsap.fromTo(".skill-card", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, scrollTrigger: { trigger: "#skills .skills-grid", start: "top 80%" } });
         gsap.fromTo("#projects h2", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.8, scrollTrigger: { trigger: "#projects", start: "top 85%" } });
@@ -36,14 +24,13 @@
         gsap.fromTo("#contact h2", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.8, scrollTrigger: { trigger: "#contact", start: "top 85%" } });
         gsap.fromTo(".contact-grid", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, scrollTrigger: { trigger: "#contact .contact-section", start: "top 80%" } });
     } else {
-        console.warn("GSAP/ScrollTrigger not loaded, skipping animations.");
         document.querySelectorAll('.hero-badge, h1, .typewriter-container, .hero p, .hero .btn, .profile-wrapper').forEach(el => {
             el.style.opacity = '1';
             el.style.transform = 'none';
         });
     }
     
-    // ========== NUMBER COUNTER WITH SAFETY ==========
+    // ========== NUMBER COUNTER ==========
     function animateNumber(element, start, end, duration) {
         if (!element) return;
         let startTime = null;
@@ -74,7 +61,7 @@
         observer.observe(stat1);
     }
     
-    // ========== MAGNETIC BUTTON (SKIP TOUCH DEVICE) ==========
+    // ========== MAGNETIC BUTTON (DESKTOP ONLY) ==========
     if (!('ontouchstart' in window)) {
         document.querySelectorAll('.magnetic-btn').forEach(btn => {
             btn.addEventListener('mousemove', function(e) {
@@ -93,7 +80,7 @@
         });
     }
     
-    // ========== PARTICLE BACKGROUND OPTIMIZED ==========
+    // ========== PARTICLE BACKGROUND ==========
     const canvas = document.getElementById('particle-canvas');
     if (canvas) {
         const ctx = canvas.getContext('2d');
@@ -154,7 +141,7 @@
         animateParticles();
     }
     
-    // ========== TYPEWRITER WITH CLEANUP ==========
+    // ========== TYPEWRITER ==========
     const typeEl = document.getElementById('typewriter-text');
     if (typeEl) {
         const phrases = ["Embedded Systems Engineer", "IoT & Firmware Developer", "Neubrutal UI Enthusiast", "Computer Engineering 2026"];
@@ -192,7 +179,7 @@
         });
     }
     
-    // ========== MUSIC PLAYER - FULL FIX SYNC PLAY/PAUSE ICON ==========
+    // ========== MUSIC PLAYER - ANTI BLOCK, SEKALI KLIK NYALA ==========
     const tracks = [
         { name: "When I Was Your Man", file: "music/1.mp3" },
         { name: "Into It", file: "music/2.mp3" },
@@ -200,8 +187,9 @@
         { name: "That Should Be Me", file: "music/4.mp3" },
         { name: "About You", file: "music/5.mp3" }
     ];
+    
     let currentTrack = 0;
-    let audio = new Audio();
+    let audio = null;
     let isPlaying = false;
     
     const musicMainBtn = document.getElementById('musicMainBtn');
@@ -218,21 +206,62 @@
     const durationSpan = document.getElementById('durationTimeMini');
     
     if (!musicMainBtn || !popupCard) {
-        console.warn("Music player elements missing.");
+        console.log("Music player elements missing.");
     } else {
+        
+        function initAudio() {
+            if (audio) return;
+            audio = new Audio();
+            audio.preload = "auto";
+            
+            audio.addEventListener('play', () => {
+                isPlaying = true;
+                syncPlayIcon();
+            });
+            
+            audio.addEventListener('pause', () => {
+                isPlaying = false;
+                syncPlayIcon();
+            });
+            
+            audio.addEventListener('ended', () => {
+                isPlaying = false;
+                syncPlayIcon();
+                nextTrackFunc();
+            });
+            
+            audio.addEventListener('loadedmetadata', () => {
+                if (audio.duration && isFinite(audio.duration)) {
+                    durationSpan.textContent = formatTimeSec(audio.duration);
+                }
+            });
+            
+            audio.addEventListener('error', () => {
+                nowPlayingSpan.textContent = '❌ Gagal load track';
+                isPlaying = false;
+                syncPlayIcon();
+            });
+            
+            audio.addEventListener('timeupdate', () => {
+                if (audio.duration && isFinite(audio.duration)) {
+                    const percent = (audio.currentTime / audio.duration) * 100;
+                    progressFill.style.width = Math.min(percent, 100) + '%';
+                    currentTimeSpan.textContent = formatTimeSec(audio.currentTime);
+                }
+            });
+        }
+        
         function formatTimeSec(sec) {
             if (isNaN(sec) || !isFinite(sec)) return "0:00";
             const mins = Math.floor(sec / 60);
             const secs = Math.floor(sec % 60);
-            return `${mins}:${secs < 10 ? '0' + secs : secs}`;
+            return mins + ":" + (secs < 10 ? '0' + secs : secs);
         }
         
-        // Fungsi tunggal buat update icon berdasarkan state REAL
         function syncPlayIcon() {
             const icon = playPauseBtn.querySelector('i');
             if (!icon) return;
-            // Cek beneran lagi playing atau engga (antisipasi pause event)
-            if (!audio.paused && audio.currentTime > 0 && !audio.ended) {
+            if (audio && !audio.paused && audio.currentTime > 0 && !audio.ended) {
                 icon.className = 'fas fa-pause';
                 isPlaying = true;
             } else {
@@ -242,29 +271,15 @@
         }
         
         function loadTrack(index) {
+            if (!audio) initAudio();
             if (index < 0 || index >= tracks.length) index = 0;
             currentTrack = index;
             audio.src = tracks[currentTrack].file;
-            audio.load();
-            nowPlayingSpan.textContent = `🎵 ${tracks[currentTrack].name}`;
+            nowPlayingSpan.textContent = '🎵 ' + tracks[currentTrack].name;
             updateActiveTrackUI();
             progressFill.style.width = '0%';
             currentTimeSpan.textContent = "0:00";
             durationSpan.textContent = "0:00";
-            
-            // Bersihin event listener lama sebelum nambah baru
-            audio.onloadedmetadata = function() {
-                if (audio.duration && !isNaN(audio.duration)) {
-                    durationSpan.textContent = formatTimeSec(audio.duration);
-                }
-            };
-            
-            audio.onerror = function() {
-                console.warn("Audio file error:", tracks[currentTrack].file);
-                nowPlayingSpan.textContent = '❌ Error loading track';
-                isPlaying = false;
-                syncPlayIcon();
-            };
         }
         
         function updateActiveTrackUI() {
@@ -273,32 +288,67 @@
             });
         }
         
+        function playTrack() {
+            if (!audio) initAudio();
+            if (!audio.src || audio.src === window.location.href) {
+                loadTrack(currentTrack);
+            }
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    syncPlayIcon();
+                }).catch(() => {
+                    nowPlayingSpan.textContent = 'Klik lagi ya!';
+                    syncPlayIcon();
+                });
+            }
+        }
+        
+        function pauseTrack() {
+            if (!audio) return;
+            audio.pause();
+            syncPlayIcon();
+        }
+        
+        function togglePlay() {
+            initAudio();
+            if (isPlaying) {
+                pauseTrack();
+            } else {
+                playTrack();
+            }
+        }
+        
+        function nextTrackFunc() {
+            initAudio();
+            currentTrack = (currentTrack + 1) % tracks.length;
+            loadTrack(currentTrack);
+            playTrack();
+        }
+        
+        function prevTrackFunc() {
+            initAudio();
+            currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
+            loadTrack(currentTrack);
+            playTrack();
+        }
+        
         function renderTrackList() {
+            if (!trackListDiv) return;
             trackListDiv.innerHTML = '';
             tracks.forEach((track, i) => {
                 const div = document.createElement('div');
                 div.className = 'track-item-mini';
-                div.innerHTML = `<span class="track-name-mini">${track.name}</span> <i class="fas fa-play-circle"></i>`;
-                div.addEventListener('click', () => {
-                    if (!userInteracted) {
-                        alert("Klik/tap di mana saja dulu ya buat aktifin audio!");
-                        return;
-                    }
+                div.innerHTML = '<span class="track-name-mini">' + track.name + '</span> <i class="fas fa-play-circle"></i>';
+                div.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    initAudio();
                     if (currentTrack === i && isPlaying) {
-                        // Klik track yang sama & lagi playing = pause
-                        audio.pause();
-                        syncPlayIcon();
+                        pauseTrack();
                     } else {
-                        // Ganti track atau play ulang
                         currentTrack = i;
                         loadTrack(currentTrack);
-                        audio.play().then(() => {
-                            syncPlayIcon();
-                        }).catch((e) => {
-                            console.warn("Play blocked:", e);
-                            nowPlayingSpan.textContent = '❌ Playback blocked';
-                            syncPlayIcon();
-                        });
+                        playTrack();
                     }
                 });
                 trackListDiv.appendChild(div);
@@ -306,90 +356,57 @@
             updateActiveTrackUI();
         }
         
-        function togglePlay() {
-            if (isPlaying) {
-                // PAUSE
-                audio.pause();
-                syncPlayIcon(); // langsung sync ke play icon
-            } else {
-                // PLAY
-                audio.play().then(() => {
-                    syncPlayIcon(); // sync ke pause icon setelah play sukses
-                }).catch((e) => {
-                    console.warn("Play blocked:", e);
-                    nowPlayingSpan.textContent = 'Klik di halaman dulu ya!';
-                    syncPlayIcon(); // tetep play icon karena gagal
-                });
+        musicMainBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            popupCard.classList.toggle('show');
+            initAudio();
+            if (!audio.src || audio.src === window.location.href) {
+                loadTrack(0);
             }
-        }
-        
-        function nextTrackFunc() {
-            currentTrack = (currentTrack + 1) % tracks.length;
-            loadTrack(currentTrack);
-            audio.play().then(() => {
-                syncPlayIcon();
-            }).catch(() => {
-                syncPlayIcon();
-            });
-        }
-        
-        function prevTrackFunc() {
-            currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
-            loadTrack(currentTrack);
-            audio.play().then(() => {
-                syncPlayIcon();
-            }).catch(() => {
-                syncPlayIcon();
-            });
-        }
-        
-        // Event listeners tombol fisik
-        musicMainBtn.addEventListener('click', () => popupCard.classList.toggle('show'));
-        closePopup.addEventListener('click', () => popupCard.classList.remove('show'));
-        playPauseBtn.addEventListener('click', togglePlay);
-        prevBtn.addEventListener('click', prevTrackFunc);
-        nextBtn.addEventListener('click', nextTrackFunc);
-        
-        // Event listeners native audio buat deteksi perubahan state
-        audio.addEventListener('play', () => {
-            isPlaying = true;
-            syncPlayIcon();
         });
         
-        audio.addEventListener('pause', () => {
-            isPlaying = false;
-            syncPlayIcon();
+        closePopup.addEventListener('click', function(e) {
+            e.stopPropagation();
+            popupCard.classList.remove('show');
         });
         
-        audio.addEventListener('ended', () => {
-            isPlaying = false;
-            syncPlayIcon();
+        playPauseBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            togglePlay();
+        });
+        
+        prevBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            prevTrackFunc();
+        });
+        
+        nextBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
             nextTrackFunc();
         });
         
-        audio.addEventListener('timeupdate', () => {
-            if (audio.duration && !isNaN(audio.duration)) {
-                const percent = (audio.currentTime / audio.duration) * 100;
-                progressFill.style.width = Math.min(percent, 100) + '%';
-                currentTimeSpan.textContent = formatTimeSec(audio.currentTime);
+        document.addEventListener('click', function(e) {
+            if (popupCard.classList.contains('show') &&
+                !popupCard.contains(e.target) &&
+                e.target !== musicMainBtn &&
+                !musicMainBtn.contains(e.target)) {
+                popupCard.classList.remove('show');
             }
         });
         
-        progressBar.addEventListener('click', (e) => {
+        progressBar.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (!audio || !audio.duration || !isFinite(audio.duration)) return;
             const rect = progressBar.getBoundingClientRect();
             const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-            if (audio.duration && !isNaN(audio.duration)) {
-                audio.currentTime = percent * audio.duration;
-            }
+            audio.currentTime = percent * audio.duration;
         });
         
-        // Init player
         renderTrackList();
-        loadTrack(0);
         syncPlayIcon();
     }
     
-    // ========== SECURE EMAILJS FORM HANDLER ==========
+    // ========== EMAILJS FORM HANDLER ==========
     (function() {
         const RECIPIENT_EMAIL = "mnajat0508@gmail.com";
         const MAX_MESSAGES_PER_MINUTE = 3;
@@ -470,7 +487,6 @@
             }
             
             if (honeypotField && honeypotField.value) {
-                console.warn("Honeypot triggered!");
                 statusDiv.innerHTML = '✅ Terkirim! Terima kasih.';
                 statusDiv.style.color = "#2b8c2b";
                 form.reset();
@@ -523,7 +539,7 @@
             };
             
             emailjs.send("service_9measla", "template_67rf4v7", templateParams)
-                .then(function(response) {
+                .then(function() {
                     statusDiv.innerHTML = '✅ Pesan terkirim! Terima kasih, ' + sanitizeInput(name) + '!';
                     statusDiv.style.color = "#2b8c2b";
                     statusDiv.style.background = "#dcfce7";
@@ -552,7 +568,7 @@
     })();
     
     // ========== SMOOTH SCROLL ==========
-    document.querySelectorAll('nav a, .hero .btn, .btn-outline').forEach(link => {
+    document.querySelectorAll('nav a, .hero .btn').forEach(link => {
         link.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
             if (href && href.startsWith('#') && href.length > 1) {
