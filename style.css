@@ -13,17 +13,38 @@
     --card-bg: #ffffff;
     --shadow-hard: 8px 8px 0 var(--border);
     --shadow-hard-sm: 5px 5px 0 var(--border);
+    --shadow-hover-color: #bbaa86;
     --transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+html {
+    font-size: 16px;
 }
 
 body {
     background-color: var(--bg);
     font-family: 'Inter', sans-serif;
     color: var(--primary);
-    line-height: 1.5;
+    line-height: 1.6;
     padding: 1.5rem;
     padding-bottom: 5rem;
     overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg);
+    border-left: 2px solid var(--border);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary);
 }
 
 .container {
@@ -60,7 +81,7 @@ body {
     white-space: nowrap;
     background: var(--border);
     color: var(--secondary);
-    padding: 0.5rem 0;
+    padding: 0.6rem 0;
     margin: 1rem 0;
     font-family: 'Space Grotesk', monospace;
     font-weight: bold;
@@ -71,6 +92,7 @@ body {
 }
 .marquee-content span {
     margin: 0 1.5rem;
+    font-size: 0.85rem;
 }
 @keyframes marquee {
     0% { transform: translateX(0); }
@@ -94,7 +116,6 @@ body {
     transition: all 0.3s ease;
     cursor: pointer;
 }
-/* Bentuk unik: kombinasi kotak dengan potongan diagonal */
 .profile-frame.shape-unique {
     clip-path: polygon(0% 0%, 85% 0%, 100% 15%, 100% 100%, 15% 100%, 0% 85%);
 }
@@ -113,7 +134,6 @@ body {
     transform: translate(-5px, -5px);
     box-shadow: 15px 15px 0 var(--border);
 }
-/* Efek border berjalan (glow border animation) */
 .profile-frame::before {
     content: '';
     position: absolute;
@@ -134,15 +154,14 @@ body {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-/* Efek stiker neubrutal */
 .profile-badge {
     position: absolute;
     bottom: -10px;
     right: -10px;
     background: var(--accent);
     color: var(--border);
-    padding: 0.2rem 0.6rem;
-    font-size: 0.7rem;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.75rem;
     font-weight: bold;
     border: 2px solid var(--border);
     box-shadow: 3px 3px 0 var(--border);
@@ -151,9 +170,10 @@ body {
     transform: rotate(5deg);
 }
 .profile-badge i {
-    margin-right: 3px;
+    margin-right: 4px;
 }
-/* Hero flex layout dengan foto */
+
+/* ========== HERO FLEX LAYOUT ========== */
 .hero-flex {
     display: flex;
     flex-wrap: wrap;
@@ -170,19 +190,8 @@ body {
     text-align: center;
     min-width: 200px;
 }
-@media (max-width: 768px) {
-    .hero-flex {
-        flex-direction: column-reverse;
-        text-align: center;
-    }
-    .profile-wrapper {
-        margin-bottom: 1rem;
-    }
-    h1 br {
-        display: none;
-    }
-}
 
+/* ========== TIPOGRAFI ========== */
 h1, h2, h3, .logo, .btn, nav a, .skill-card, .project-card {
     font-family: 'Space Grotesk', monospace;
     font-weight: 600;
@@ -201,6 +210,11 @@ h2 {
     padding-left: 1rem;
 }
 
+h3 {
+    font-size: 1rem;
+}
+
+/* ========== HEADER & NAVIGASI ========== */
 header {
     display: flex;
     flex-wrap: wrap;
@@ -216,7 +230,7 @@ header {
     font-size: 1.4rem;
     font-weight: 800;
     background: var(--secondary);
-    padding: 0.3rem 1rem;
+    padding: 0.4rem 1.1rem;
     border: 2px solid var(--border);
     box-shadow: 5px 5px 0 var(--border);
     transition: var(--transition);
@@ -236,7 +250,7 @@ nav a {
     text-decoration: none;
     font-weight: 700;
     background: white;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.1rem;
     border: 2px solid var(--border);
     box-shadow: var(--shadow-hard-sm);
     color: var(--primary);
@@ -249,6 +263,7 @@ nav a:hover {
     box-shadow: 7px 7px 0 var(--border);
 }
 
+/* ========== BUTTON & INTERACTIVE ========== */
 .btn, .project-card a, .submit-btn, .skill-card, .contact-item, .social-icon {
     transition: var(--transition);
     cursor: pointer;
@@ -263,7 +278,7 @@ nav a:hover {
     background: var(--secondary);
     border: 2px solid var(--border);
     box-shadow: var(--shadow-hard-sm);
-    padding: 0.6rem 1.2rem;
+    padding: 0.65rem 1.3rem;
     font-weight: 700;
     text-decoration: none;
     color: var(--border);
@@ -272,30 +287,27 @@ nav a:hover {
 }
 .btn:hover, .project-card a:hover, .submit-btn:hover {
     transform: translate(-4px, -4px);
-    box-shadow: 9px 9px 0 var(--border);
+    box-shadow: 9px 9px 0 var(--shadow-hover-color);
     background: #ffce4d;
 }
-.btn-outline {
-    background: white;
-    margin-left: 0.6rem;
-}
 
+/* ========== HERO SECTION ========== */
 .hero {
     background: var(--card-bg);
     border: 3px solid var(--border);
-    padding: 1.8rem;
+    padding: 2rem;
     margin-bottom: 2.5rem;
-    box-shadow: 12px 12px 0 #cec2a8;
+    box-shadow: 12px 12px 0 var(--shadow-hover-color);
     position: relative;
     overflow: hidden;
 }
 .hero-badge {
     background: var(--border);
     color: var(--secondary);
-    padding: 0.2rem 1rem;
+    padding: 0.35rem 1.2rem;
     display: inline-block;
     font-weight: 700;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     margin-bottom: 1rem;
 }
 
@@ -303,13 +315,13 @@ nav a:hover {
     font-size: 1rem;
     font-weight: 600;
     margin: 0.8rem 0;
-    min-height: 55px;
+    min-height: 65px;
 }
 #typewriter-text {
     background: #1e1e2a;
     color: #ffd966;
     display: inline-block;
-    padding: 0.2rem 0.8rem;
+    padding: 0.3rem 1rem;
     border: 2px solid var(--border);
     box-shadow: 4px 4px 0 var(--border);
     font-family: 'Space Grotesk', monospace;
@@ -334,19 +346,21 @@ nav a:hover {
     flex-wrap: wrap;
 }
 .stat {
-    background: rgba(255,255,240,0.6);
-    padding: 0.3rem 0.8rem;
-    border: 1px solid var(--border);
+    background: rgba(255, 255, 240, 0.8);
+    padding: 0.4rem 0.9rem;
+    border: 2px solid var(--border);
 }
 .stat p:first-child {
     font-size: 1.5rem;
     font-weight: 800;
+    color: var(--primary);
 }
 .stat span {
     font-size: 0.8rem;
+    font-weight: 600;
 }
 
-/* Particle Background */
+/* ========== PARTICLE CANVAS FALLBACK ========== */
 #particle-canvas {
     position: absolute;
     top: 0;
@@ -355,6 +369,9 @@ nav a:hover {
     height: 100%;
     pointer-events: none;
     z-index: 0;
+    /* Fallback pattern jika canvas kosong */
+    background-image: radial-gradient(circle, rgba(10,12,16,0.04) 1px, transparent 1px);
+    background-size: 20px 20px;
 }
 .hero {
     position: relative;
@@ -365,16 +382,17 @@ nav a:hover {
     z-index: 2;
 }
 
+/* ========== SKILLS GRID ========== */
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 1rem;
     margin: 1.5rem 0 2rem;
 }
 .skill-card {
     background: white;
     border: 2px solid var(--border);
-    padding: 1rem 0.5rem;
+    padding: 1.2rem 0.6rem;
     text-align: center;
     box-shadow: var(--shadow-hard-sm);
 }
@@ -385,15 +403,18 @@ nav a:hover {
 }
 .skill-card h3 {
     font-size: 1rem;
+    margin-bottom: 0.3rem;
 }
 .skill-card p {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
+    color: #333;
 }
 .skill-card:hover {
     transform: translate(-4px, -4px);
-    box-shadow: 10px 10px 0 #b1a07e;
+    box-shadow: 10px 10px 0 var(--shadow-hover-color);
 }
 
+/* ========== PROJECTS GRID ========== */
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -403,7 +424,7 @@ nav a:hover {
 .project-card {
     background: #ffffff;
     border: 2px solid var(--border);
-    padding: 1.3rem;
+    padding: 1.4rem;
     box-shadow: var(--shadow-hard);
     display: flex;
     flex-direction: column;
@@ -419,17 +440,18 @@ nav a:hover {
 .tech-badge {
     background: var(--border);
     color: var(--secondary);
-    padding: 0.2rem 0.5rem;
-    font-size: 0.6rem;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
     font-weight: bold;
     display: inline-block;
     margin-right: 0.3rem;
     margin-bottom: 0.5rem;
 }
 .project-card p {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     margin: 0.5rem 0;
     flex-grow: 1;
+    color: #333;
 }
 .project-card a {
     margin-top: 1rem;
@@ -437,33 +459,35 @@ nav a:hover {
     background: var(--border);
     color: var(--secondary);
     box-shadow: 4px 4px 0 #3a3a4a;
-    padding: 0.4rem 1rem;
-    font-size: 0.75rem;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.8rem;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.4rem;
 }
 
+/* ========== ABOUT SECTION ========== */
 .about-wrap {
     background: #e7dfcd;
     border: 3px solid var(--border);
-    padding: 1.5rem;
+    padding: 1.8rem;
     margin: 1.5rem 0 2rem;
-    box-shadow: 10px 10px 0 #bbaa86;
+    box-shadow: 10px 10px 0 var(--shadow-hover-color);
 }
 .about-flex {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.2rem;
+    gap: 1.5rem;
     align-items: center;
 }
 .about-text {
     flex: 2;
 }
 .about-text p {
-    margin-bottom: 0.6rem;
-    font-size: 0.9rem;
+    margin-bottom: 0.7rem;
+    font-size: 0.95rem;
+    color: #1a1a2e;
 }
 .social-icons-modern {
     flex: 1;
@@ -474,13 +498,13 @@ nav a:hover {
 .social-icon {
     background: white;
     border: 2px solid var(--border);
-    padding: 0.4rem 0.8rem;
-    font-size: 1rem;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.85rem;
     box-shadow: 4px 4px 0 var(--border);
     color: var(--border);
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.4rem;
     text-decoration: none;
     font-weight: bold;
 }
@@ -492,63 +516,72 @@ nav a:hover {
     background: var(--secondary);
 }
 
+/* ========== CONTACT SECTION ========== */
 .contact-section {
     background: white;
     border: 3px solid var(--border);
-    padding: 1.5rem;
+    padding: 1.8rem;
     margin-bottom: 2rem;
-    box-shadow: 10px 10px 0 #cabc96;
+    box-shadow: 10px 10px 0 var(--shadow-hover-color);
 }
 .contact-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
 }
 .contact-item {
     display: flex;
     align-items: center;
-    gap: 0.7rem;
+    gap: 0.8rem;
     background: #fcf6ea;
-    padding: 0.6rem 0.8rem;
+    padding: 0.8rem 1rem;
     border: 2px solid var(--border);
     margin-bottom: 0.7rem;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
 }
 .contact-item i {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
 }
 .form-group {
-    margin-bottom: 0.8rem;
+    margin-bottom: 1rem;
 }
 input, textarea {
     width: 100%;
-    padding: 0.6rem;
-    font-family: 'Inter', monospace;
+    padding: 0.7rem;
+    font-family: 'Inter', sans-serif;
     background: #fffbf0;
     border: 2px solid var(--border);
     font-weight: 500;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+}
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 3px 3px 0 var(--secondary);
 }
 .submit-btn {
     width: 100%;
     background: var(--border);
     color: var(--secondary);
-    font-size: 0.9rem;
-    padding: 0.5rem;
+    font-size: 0.95rem;
+    padding: 0.6rem;
     border: 2px solid var(--border);
     font-weight: bold;
 }
 
+/* ========== FOOTER ========== */
 footer {
     text-align: center;
     border-top: 3px solid var(--border);
-    padding: 1.2rem 0 0.3rem;
-    margin-top: 0.8rem;
-    font-size: 0.7rem;
+    padding: 1.5rem 0 0.5rem;
+    margin-top: 1rem;
+    font-size: 0.8rem;
     font-weight: 600;
+    color: #444;
 }
 
+/* ========== MUSIC PLAYER (TIDAK DIUBAH) ========== */
 .music-float {
     position: fixed;
     bottom: 20px;
@@ -591,12 +624,12 @@ footer {
 .popup-header-card {
     background: var(--border);
     color: var(--secondary);
-    padding: 0.4rem 0.8rem;
+    padding: 0.5rem 0.8rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-weight: bold;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
 }
 .popup-header-card button {
     background: none;
@@ -610,11 +643,11 @@ footer {
 }
 .now-playing-name {
     background: #fcf3df;
-    padding: 0.3rem;
+    padding: 0.4rem;
     border: 2px solid var(--border);
     text-align: center;
     font-weight: bold;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     margin-bottom: 0.6rem;
     white-space: nowrap;
     overflow: hidden;
@@ -629,12 +662,12 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.4rem;
+    padding: 0.5rem;
     border: 1px solid var(--border);
     margin-bottom: 4px;
     background: #fff9ef;
     cursor: pointer;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 500;
 }
 .track-item-mini.active-track {
@@ -656,11 +689,11 @@ footer {
 .player-buttons button {
     background: white;
     border: 2px solid var(--border);
-    padding: 0.2rem 0.6rem;
+    padding: 0.3rem 0.7rem;
     cursor: pointer;
     font-weight: bold;
     box-shadow: 3px 3px 0 var(--border);
-    font-size: 0.7rem;
+    font-size: 0.75rem;
 }
 .player-buttons button:active {
     transform: translate(2px, 2px);
@@ -685,20 +718,26 @@ footer {
     background: var(--secondary);
 }
 .time-mini {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     font-weight: bold;
 }
 
+/* ========== RESPONSIVE: PC (Layar Besar) ========== */
 @media (min-width: 1024px) {
     body {
-        padding: 2rem 3rem;
+        padding: 2.5rem 3rem;
+        padding-bottom: 5rem;
     }
     .hero {
-        padding: 2.5rem;
+        padding: 2.8rem;
     }
     .profile-frame {
         width: 220px;
         height: 220px;
+    }
+    .profile-badge {
+        font-size: 0.8rem;
+        padding: 0.35rem 0.8rem;
     }
     .skills-grid {
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -711,19 +750,91 @@ footer {
         width: 320px;
         bottom: 85px;
     }
+    .contact-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
 }
 
+/* ========== RESPONSIVE: TABLET ========== */
+@media (max-width: 768px) {
+    .hero-flex {
+        flex-direction: column-reverse;
+        text-align: center;
+    }
+    .profile-wrapper {
+        margin-bottom: 1rem;
+    }
+    h1 br {
+        display: none;
+    }
+    .hero-stats {
+        justify-content: center;
+    }
+    .social-icons-modern {
+        justify-content: center;
+        width: 100%;
+    }
+    .about-flex {
+        flex-direction: column;
+        text-align: center;
+    }
+    nav {
+        justify-content: center;
+        width: 100%;
+    }
+    header {
+        flex-direction: column;
+        align-items: center;
+    }
+    .logo {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* ========== RESPONSIVE: MOBILE KECIL ========== */
 @media (max-width: 550px) {
     body {
         padding: 1rem;
-        padding-bottom: 4rem;
+        padding-bottom: 4.5rem;
     }
     .profile-frame {
         width: 150px;
         height: 150px;
     }
+    .profile-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.6rem;
+        bottom: -8px;
+        right: -8px;
+    }
+    .hero {
+        padding: 1.2rem;
+    }
+    .hero-badge {
+        font-size: 0.75rem;
+        padding: 0.3rem 1rem;
+    }
     .hero-stats .stat p:first-child {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
+    }
+    .hero-stats .stat span {
+        font-size: 0.75rem;
+    }
+    .skills-grid {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 0.8rem;
+    }
+    .skill-card {
+        padding: 1rem 0.4rem;
+    }
+    .skill-card i {
+        font-size: 1.6rem;
+    }
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+    .contact-grid {
+        grid-template-columns: 1fr;
     }
     .music-popup-card {
         width: 260px;
@@ -734,5 +845,21 @@ footer {
         width: 45px;
         height: 45px;
         font-size: 1.4rem;
+    }
+    h2 {
+        font-size: 1.4rem;
+        border-left-width: 6px;
+        padding-left: 0.8rem;
+    }
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+    input, textarea {
+        font-size: 0.85rem;
+        padding: 0.6rem;
+    }
+    .submit-btn {
+        font-size: 0.9rem;
     }
 }
