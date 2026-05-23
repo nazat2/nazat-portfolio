@@ -1,3 +1,4 @@
+js
 (function() {
     "use strict";
     
@@ -43,7 +44,7 @@
         });
     }
     
-    // ========== NUMBER COUNTER WITH INTERSECTION OBSERVER ==========
+    // ========== NUMBER COUNTER WITH SAFETY ==========
     function animateNumber(element, start, end, duration) {
         if (!element) return;
         let startTime = null;
@@ -201,7 +202,7 @@
         { name: "About You", file: "music/5.mp3" }
     ];
     let currentTrack = 0;
-    const audio = new Audio();
+    let audio = new Audio();
     let isPlaying = false;
     
     const musicMainBtn = document.getElementById('musicMainBtn');
@@ -231,6 +232,7 @@
         function syncPlayIcon() {
             const icon = playPauseBtn.querySelector('i');
             if (!icon) return;
+            // Cek beneran lagi playing atau engga (antisipasi pause event)
             if (!audio.paused && audio.currentTime > 0 && !audio.ended) {
                 icon.className = 'fas fa-pause';
                 isPlaying = true;
@@ -244,11 +246,26 @@
             if (index < 0 || index >= tracks.length) index = 0;
             currentTrack = index;
             audio.src = tracks[currentTrack].file;
+            audio.load();
             nowPlayingSpan.textContent = `🎵 ${tracks[currentTrack].name}`;
             updateActiveTrackUI();
             progressFill.style.width = '0%';
             currentTimeSpan.textContent = "0:00";
             durationSpan.textContent = "0:00";
+            
+            // Bersihin event listener lama sebelum nambah baru
+            audio.onloadedmetadata = function() {
+                if (audio.duration && !isNaN(audio.duration)) {
+                    durationSpan.textContent = formatTimeSec(audio.duration);
+                }
+            };
+            
+            audio.onerror = function() {
+                console.warn("Audio file error:", tracks[currentTrack].file);
+                nowPlayingSpan.textContent = '❌ Error loading track';
+                isPlaying = false;
+                syncPlayIcon();
+            };
         }
         
         function updateActiveTrackUI() {
@@ -269,9 +286,11 @@
                         return;
                     }
                     if (currentTrack === i && isPlaying) {
+                        // Klik track yang sama & lagi playing = pause
                         audio.pause();
                         syncPlayIcon();
                     } else {
+                        // Ganti track atau play ulang
                         currentTrack = i;
                         loadTrack(currentTrack);
                         audio.play().then(() => {
@@ -290,15 +309,17 @@
         
         function togglePlay() {
             if (isPlaying) {
+                // PAUSE
                 audio.pause();
-                syncPlayIcon();
+                syncPlayIcon(); // langsung sync ke play icon
             } else {
+                // PLAY
                 audio.play().then(() => {
-                    syncPlayIcon();
+                    syncPlayIcon(); // sync ke pause icon setelah play sukses
                 }).catch((e) => {
                     console.warn("Play blocked:", e);
                     nowPlayingSpan.textContent = 'Klik di halaman dulu ya!';
-                    syncPlayIcon();
+                    syncPlayIcon(); // tetep play icon karena gagal
                 });
             }
         }
@@ -323,24 +344,14 @@
             });
         }
         
-        // Event listeners tombol
+        // Event listeners tombol fisik
         musicMainBtn.addEventListener('click', () => popupCard.classList.toggle('show'));
         closePopup.addEventListener('click', () => popupCard.classList.remove('show'));
         playPauseBtn.addEventListener('click', togglePlay);
         prevBtn.addEventListener('click', prevTrackFunc);
         nextBtn.addEventListener('click', nextTrackFunc);
         
-        // Klik di luar popup untuk nutup
-        document.addEventListener('click', function(e) {
-            if (popupCard.classList.contains('show') &&
-                !popupCard.contains(e.target) &&
-                e.target !== musicMainBtn &&
-                !musicMainBtn.contains(e.target)) {
-                popupCard.classList.remove('show');
-            }
-        });
-        
-        // Event listeners native audio
+        // Event listeners native audio buat deteksi perubahan state
         audio.addEventListener('play', () => {
             isPlaying = true;
             syncPlayIcon();
@@ -357,21 +368,8 @@
             nextTrackFunc();
         });
         
-        audio.addEventListener('loadedmetadata', () => {
-            if (audio.duration && isFinite(audio.duration)) {
-                durationSpan.textContent = formatTimeSec(audio.duration);
-            }
-        });
-        
-        audio.addEventListener('error', () => {
-            console.warn("Audio file error:", tracks[currentTrack].file);
-            nowPlayingSpan.textContent = '❌ Error loading track';
-            isPlaying = false;
-            syncPlayIcon();
-        });
-        
         audio.addEventListener('timeupdate', () => {
-            if (audio.duration && isFinite(audio.duration)) {
+            if (audio.duration && !isNaN(audio.duration)) {
                 const percent = (audio.currentTime / audio.duration) * 100;
                 progressFill.style.width = Math.min(percent, 100) + '%';
                 currentTimeSpan.textContent = formatTimeSec(audio.currentTime);
@@ -381,7 +379,7 @@
         progressBar.addEventListener('click', (e) => {
             const rect = progressBar.getBoundingClientRect();
             const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-            if (audio.duration && isFinite(audio.duration)) {
+            if (audio.duration && !isNaN(audio.duration)) {
                 audio.currentTime = percent * audio.duration;
             }
         });
@@ -555,7 +553,7 @@
     })();
     
     // ========== SMOOTH SCROLL ==========
-    document.querySelectorAll('nav a, .hero .btn').forEach(link => {
+    document.querySelectorAll('nav a, .hero .btn, .btn-outline').forEach(link => {
         link.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
             if (href && href.startsWith('#') && href.length > 1) {
