@@ -179,7 +179,7 @@
         });
     }
     
-    // ========== MUSIC PLAYER - ANTI BLOCK, SEKALI KLIK NYALA ==========
+    // ========== MUSIC PLAYER - INSTAN RESPON, NO DELAY ==========
     const tracks = [
         { name: "When I Was Your Man", file: "music/1.mp3" },
         { name: "Into It", file: "music/2.mp3" },
@@ -209,24 +209,15 @@
         console.log("Music player elements missing.");
     } else {
         
-        function initAudio() {
+        function createAudio() {
             if (audio) return;
             audio = new Audio();
             audio.preload = "auto";
-            
-            audio.addEventListener('play', () => {
-                isPlaying = true;
-                syncPlayIcon();
-            });
-            
-            audio.addEventListener('pause', () => {
-                isPlaying = false;
-                syncPlayIcon();
-            });
+            audio.volume = 1.0;
             
             audio.addEventListener('ended', () => {
                 isPlaying = false;
-                syncPlayIcon();
+                updatePlayIcon();
                 nextTrackFunc();
             });
             
@@ -237,9 +228,9 @@
             });
             
             audio.addEventListener('error', () => {
-                nowPlayingSpan.textContent = '❌ Gagal load track';
+                nowPlayingSpan.textContent = '❌ Gagal load';
                 isPlaying = false;
-                syncPlayIcon();
+                updatePlayIcon();
             });
             
             audio.addEventListener('timeupdate', () => {
@@ -258,20 +249,23 @@
             return mins + ":" + (secs < 10 ? '0' + secs : secs);
         }
         
-        function syncPlayIcon() {
+        function updatePlayIcon() {
             const icon = playPauseBtn.querySelector('i');
             if (!icon) return;
-            if (audio && !audio.paused && audio.currentTime > 0 && !audio.ended) {
+            if (isPlaying) {
                 icon.className = 'fas fa-pause';
-                isPlaying = true;
             } else {
                 icon.className = 'fas fa-play';
-                isPlaying = false;
             }
         }
         
+        function setPlaying(state) {
+            isPlaying = state;
+            updatePlayIcon();
+        }
+        
         function loadTrack(index) {
-            if (!audio) initAudio();
+            createAudio();
             if (index < 0 || index >= tracks.length) index = 0;
             currentTrack = index;
             audio.src = tracks[currentTrack].file;
@@ -289,29 +283,26 @@
         }
         
         function playTrack() {
-            if (!audio) initAudio();
+            createAudio();
             if (!audio.src || audio.src === window.location.href) {
                 loadTrack(currentTrack);
             }
-            const playPromise = audio.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    syncPlayIcon();
-                }).catch(() => {
-                    nowPlayingSpan.textContent = 'Klik lagi ya!';
-                    syncPlayIcon();
-                });
-            }
+            setPlaying(true);
+            audio.play().then(() => {
+                setPlaying(true);
+            }).catch(() => {
+                setPlaying(false);
+                nowPlayingSpan.textContent = 'Klik lagi ya!';
+            });
         }
         
         function pauseTrack() {
             if (!audio) return;
+            setPlaying(false);
             audio.pause();
-            syncPlayIcon();
         }
         
         function togglePlay() {
-            initAudio();
             if (isPlaying) {
                 pauseTrack();
             } else {
@@ -320,17 +311,25 @@
         }
         
         function nextTrackFunc() {
-            initAudio();
             currentTrack = (currentTrack + 1) % tracks.length;
             loadTrack(currentTrack);
-            playTrack();
+            setPlaying(true);
+            audio.play().then(() => {
+                setPlaying(true);
+            }).catch(() => {
+                setPlaying(false);
+            });
         }
         
         function prevTrackFunc() {
-            initAudio();
             currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
             loadTrack(currentTrack);
-            playTrack();
+            setPlaying(true);
+            audio.play().then(() => {
+                setPlaying(true);
+            }).catch(() => {
+                setPlaying(false);
+            });
         }
         
         function renderTrackList() {
@@ -342,7 +341,6 @@
                 div.innerHTML = '<span class="track-name-mini">' + track.name + '</span> <i class="fas fa-play-circle"></i>';
                 div.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    initAudio();
                     if (currentTrack === i && isPlaying) {
                         pauseTrack();
                     } else {
@@ -359,7 +357,7 @@
         musicMainBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             popupCard.classList.toggle('show');
-            initAudio();
+            createAudio();
             if (!audio.src || audio.src === window.location.href) {
                 loadTrack(0);
             }
@@ -403,7 +401,7 @@
         });
         
         renderTrackList();
-        syncPlayIcon();
+        setPlaying(false);
     }
     
     // ========== EMAILJS FORM HANDLER ==========
